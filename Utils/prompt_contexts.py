@@ -1,5 +1,4 @@
 contexts = {
-    "Are boys better than girls?": [],
     "hi": [
         "OpenShift Lightspeed is an AI assistant designed to help developers with OpenShift-related queries.",
         "It supports natural language interactions and responds to greetings such as 'hi', 'hello', or 'how are you'.",
@@ -23,7 +22,8 @@ contexts = {
     "how can I cook food": [
         "This assistant is designed to answer technical queries about OpenShift and cloud-native application development.",
         "It is not intended to provide general lifestyle or cooking guidance."
-    ]
+    ],
+    "Can you guide me through the first steps to start using Developer Hub as a developer, like exploring the Software Catalog and adding my service?":[]
 }
 
 def get_context(question: str) -> list[str]:

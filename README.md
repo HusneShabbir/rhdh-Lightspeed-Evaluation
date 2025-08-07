@@ -1,4 +1,4 @@
-# LightspeedEvaluation Test Suite
+# LightspeedEvaluation
 
 This repository contains automated tests for evaluating RAG (Retrieval-Augmented Generation) responses from OpenShift Lightspeed using various quality metrics including relevancy, faithfulness, bias, and hallucination.
 
@@ -49,26 +49,23 @@ source venv/bin/activate  # For Unix/macOS
 .\venv\Scripts\activate  # For Windows
 ```
 
-3. Install required packages:
+3. Install dependencies:
 ```bash
-pip install pytest
-pip install pytest-html
-pip install deepeval
-pip install python-dotenv
-pip install requests
-pip install matplotlib
-pip install pandas
+pip install -r requirements.txt
 ```
+
 ## Project Structure
 
 ```
 ├── Utils/
-│   ├── prompt_contexts.py    # Question contexts and utilities
-│   └── rag_respose.py       # RAG API interaction
-├── reports/                  # Test reports directory
-├── .env                      # Environment variables
-├── conftest.py              # pytest configuration and reporting
-├── pytest.ini               # pytest settings
+│   ├── prompt_contexts.py         # Question contexts and utilities
+│   └── rag_respose.py             # RAG API interaction
+├── reports/                       # Test reports directory
+├── .env                           # Environment variables
+├── conftest.py                    # pytest configuration and reporting
+├── pytest.ini                     # pytest settings
+├── requirements.txt               # Project dependencies
+├── .gitignore                     # Git ignore patterns
 └── test_lightspeedEvaludation.py  # Main test suite
 ```
 

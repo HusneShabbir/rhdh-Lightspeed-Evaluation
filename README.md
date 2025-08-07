@@ -63,13 +63,13 @@ pip install pandas
 
 ```
 ├── Utils/
-│   ├── prompt_contexts.py    # Question contexts and utilities
-│   └── rag_respose.py       # RAG API interaction
-├── reports/                  # Test reports directory
-├── .env                      # Environment variables
-├── conftest.py              # pytest configuration and reporting
-├── pytest.ini               # pytest settings
-└── test_lightspeedEvaludation.py  # Main test suite
+│   ├── prompt_contexts.py          # Question contexts and utilities
+│   └── rag_respose.py              # RAG API interaction
+├── reports/                        # Test reports directory
+├── .env                            # Environment variables
+├── conftest.py                     # pytest configuration and reporting
+├── pytest.ini                      # pytest settings
+└── test_lightspeedEvaludation.py   # Main test suite
 ```
 
 ## Configuration

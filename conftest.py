@@ -187,3 +187,84 @@ def pytest_html_results_summary(prefix, summary, postfix):
                 )
             html += '</table>'
             summary.append(html)
+
+    # === New section for GEval metrics ===
+    # Extract GEval metric lists (fallback 0 if None)
+    informativeness = [t["informativeness"] if t["informativeness"] is not None else 0 for t in test_scores]
+    clarity = [t["clarity"] if t["clarity"] is not None else 0 for t in test_scores]
+    completeness = [t["completeness"] if t["completeness"] is not None else 0 for t in test_scores]
+    tone_appropriateness = [t["tone_appropriateness"] if t["tone_appropriateness"] is not None else 0 for t in test_scores]
+    glitch_check = [t["glitch_check"] if t["glitch_check"] is not None else 0 for t in test_scores]
+
+    plt.figure(figsize=(14, 6))
+    plt.bar([i - 2*bar_width for i in x], informativeness, width=bar_width, label='Informativeness', color='cyan')
+    plt.bar([i - bar_width for i in x], clarity, width=bar_width, label='Clarity', color='magenta')
+    plt.bar(x, completeness, width=bar_width, label='Completeness', color='yellowgreen')
+    plt.bar([i + bar_width for i in x], tone_appropriateness, width=bar_width, label='Tone Appropriateness', color='coral')
+    plt.bar([i + 2*bar_width for i in x], glitch_check, width=bar_width, label='Glitch Check', color='lightgray')
+    plt.xticks(ticks=x, labels=wrapped_questions, fontsize=9)
+    plt.ylabel('Score')
+    plt.title('GEval Metrics: Informativeness, Clarity, Completeness, Tone & Glitch Check')
+    plt.legend()
+    plt.tight_layout()
+
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    encoded_img = base64.b64encode(buffer.read()).decode('utf-8')
+    plt.close()
+
+    gevall_html = '''
+    <style>
+        details.custom-dropdown summary {
+            font-size: 18px;
+            font-weight: bold;
+            background-color: #f0f0f0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 20px;
+            outline: none;
+        }
+        details.custom-dropdown summary:hover {
+            background-color: #e0e0e0;
+        }
+    </style>
+    <details class="custom-dropdown">
+        <summary> Click here to view GEval Metrics Charts and Trends</summary>
+        <img src="data:image/png;base64,''' + encoded_img + '''" width="900"/>
+    '''
+
+    if history_file.exists():
+        records = [json.loads(line) for line in history_file.read_text().splitlines()]
+        df = pd.DataFrame(records)
+
+        if not df.empty:
+            df["timestamp"] = pd.to_datetime(df["timestamp"])
+            df.sort_values("timestamp", inplace=True)
+
+            for metric in ["informativeness", "clarity", "completeness", "tone_appropriateness", "glitch_check"]:
+                plt.figure(figsize=(12, 4))
+                for question, group in df.groupby("question"):
+                    if metric in group:
+                        plt.plot(group["timestamp"], group[metric], marker='o', label=question)
+
+                plt.ylabel(metric.replace("_", " ").capitalize())
+                plt.title(f'{metric.replace("_", " ").capitalize()} Trend Over Time')
+
+                ax = plt.gca()
+                ax.set_xticks([])
+                ax.set_xticklabels([])
+                plt.tight_layout()
+                plt.legend(loc='best', fontsize='small')
+
+                buffer = BytesIO()
+                plt.savefig(buffer, format='png')
+                plt.close()
+                buffer.seek(0)
+                encoded = base64.b64encode(buffer.read()).decode('utf-8')
+                gevall_html += f'<img src="data:image/png;base64,{encoded}" width="900"/>'
+
+    gevall_html += '</details>'
+
+    summary.append(gevall_html)

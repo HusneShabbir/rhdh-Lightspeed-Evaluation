@@ -19,7 +19,7 @@ def get_rag_response(question: str) -> tuple[str, float]:
     start = time.time()
     try:
         response = requests.post(
-            url=base_url,
+            url=f"{base_url}/v1/query",
             headers=headers,
             json={
                 "model": model,
@@ -30,7 +30,7 @@ def get_rag_response(question: str) -> tuple[str, float]:
             stream=True
         )
 
-        # ✅ Check for non-2xx status codes
+        # Check for non-2xx status codes
         if not response.ok:
             return f"❌ RAG request failed with status code {response.status_code}: {response.text}", 0.0
 

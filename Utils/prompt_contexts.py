@@ -19,11 +19,7 @@ contexts = {
         "Backstage entities represent software components and plugins interact with these entities to show or manipulate data.",
         "Organizations can build custom plugins to integrate their internal tools into the Backstage portal."
     ],
-    "how can I cook food": [
-        "This assistant is designed to answer technical queries about OpenShift and cloud-native application development.",
-        "It is not intended to provide general lifestyle or cooking guidance."
-    ],
-    "Can you guide me through the first steps to start using Developer Hub as a developer, like exploring the Software Catalog and adding my service?":[]
+    "how can I cook food": []
 }
 
 def get_context(question: str) -> list[str]:

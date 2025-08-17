@@ -7,6 +7,7 @@ This repository contains automated tests for evaluating RAG (Retrieval-Augmented
 - Python 3.11+
 - [Ollama](https://ollama.ai/) running locally
 - Access to RHDH Lightspeed API
+- [Playwright](https://playwright.dev/python/) for token extraction
 
 ## Project Setup
 
@@ -60,12 +61,22 @@ source venv/bin/activate  # For Unix/macOS
 pip install -r requirements.txt
 ```
 
+3. Install and set up Playwright (required for token extraction):
+
+```bash
+pip install playwright
+playwright install
+```
+
+> ✅ Make sure to run `playwright install` at least once to install browser drivers.
+
 ## Project Structure
 
 ```
 ├── Utils/
 │   ├── prompt_contexts.py         # Question contexts and utilities
-│   └── rag_respose.py             # RAG API interaction
+│   ├── rag_respose.py             # RAG API interaction
+│   └── auth_token.py              # Playwright-based Bearer token extraction
 ├── reports/                       # Test reports directory
 ├── .env                           # Environment variables
 ├── conftest.py                    # pytest configuration and reporting
@@ -86,10 +97,24 @@ Provider="your-provider"
 BEARER_TOKEN="your-bearer-token"
 ```
 
-* `Base_Url`: The endpoint for your Lightspeed API
+* `Base_Url`: The endpoint for your Lightspeed API (e.g. [http://localhost:7007/api/lightspeed](http://localhost:7007/api/lightspeed))
 * `Model`: The LLM model to use (e.g., gemma3:27b)
 * `Provider`: The model provider (e.g., ollama)
 * `BEARER_TOKEN`: Your authentication token
+
+> ℹ️ If the test detects `Base_Url` is `http://localhost:7007/api/lightspeed`, the token will automatically be extracted and updated in `.env` using Playwright.
+
+## 🔐 Automatic Bearer Token Retrieval
+
+When running tests against a local Lightspeed instance (`Base_Url=http://localhost:7007/api/lightspeed`), the test suite will:
+
+* Open the Lightspeed frontend ([http://localhost:3000/lightspeed](http://localhost:3000/lightspeed)) using Playwright
+* Automatically extract the `Bearer` token from browser requests
+* Save the token into `.env` under `BEARER_TOKEN`
+
+This behavior is controlled via the `replace_auth_token(page)` utility in `Utils/auth_token.py`.
+
+> ✅ Make sure Playwright is installed and set up before running tests.
 
 ## Optional GEval Metrics Toggle
 
@@ -208,3 +233,5 @@ contexts = {
 * Make sure to configure the local LLM judge before running tests
 * Valid bearer token is required for API authentication
 * Test results are automatically saved to `test_history.jsonl`
+* Playwright is required for token extraction if `Base_Url` points to the local Lightspeed backend
+

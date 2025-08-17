@@ -1,29 +1,37 @@
 import os
 import json
 import requests
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 import time
 
-load_dotenv()
-bearer_token = os.getenv("BEARER_TOKEN")
-base_url = os.getenv("Base_Url")
-model = os.getenv("Model")
-provider = os.getenv("Provider")
+def get_env_values():
+    # Reload .env file to get latest values
+    dotenv_path = find_dotenv()
+    load_dotenv(dotenv_path, override=True)
+    return {
+        "bearer_token": os.getenv("BEARER_TOKEN"),
+        "base_url": os.getenv("Base_Url"),
+        "model": os.getenv("Model"),
+        "provider": os.getenv("Provider")
+    }
 
 def get_rag_response(question: str) -> tuple[str, float]:
+    # Get latest environment values
+    env = get_env_values()
+    
     headers = {
-        "Authorization": f"Bearer {bearer_token}",
+        "Authorization": f"Bearer {env['bearer_token']}",
         "Content-Type": "application/json"
     }
 
     start = time.time()
     try:
         response = requests.post(
-            url=f"{base_url}/v1/query",
+            url=f"{env['base_url']}/v1/query",
             headers=headers,
             json={
-                "model": model,
-                "provider": provider,
+                "model": env['model'],
+                "provider": env['provider'],
                 "query": question,
                 "attachments": []
             },

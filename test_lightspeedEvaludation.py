@@ -3,9 +3,10 @@ import time
 import re
 import os
 from dotenv import load_dotenv
-
+from playwright.sync_api import Page
 from Utils.rag_respose import get_rag_response
 from Utils.prompt_contexts import get_context, get_all_questions 
+from Utils.auth_token import replace_auth_token
 from deepeval.metrics import (
     AnswerRelevancyMetric,
     FaithfulnessMetric,
@@ -17,6 +18,8 @@ from deepeval.test_case import LLMTestCase, LLMTestCaseParams
 
 load_dotenv()
 ENABLE_GEVAL = os.getenv("ENABLE_GENERAL_EVAL_METRICS", "no").lower() == "yes"
+base_url = os.getenv('Base_Url')
+expected_url = "http://localhost:7007/api/lightspeed"
 
 # Dynamically load questions
 QUESTIONS = get_all_questions()
@@ -69,7 +72,9 @@ glitch_detection = GEval(
 )
 
 @pytest.mark.parametrize("question", QUESTIONS)
-def test_llm_quality(question, request):
+def test_llm_quality(page: Page, question, request):
+    if base_url == expected_url:
+        replace_auth_token(page)
     print("\n" + "=" * 100)
     print(f"🚀 Testing question: {question}")
 

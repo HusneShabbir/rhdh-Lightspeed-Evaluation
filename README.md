@@ -98,17 +98,17 @@ BEARER_TOKEN="your-bearer-token"
 ```
 
 * `Base_Url`: The endpoint for your Lightspeed API (e.g. [http://localhost:7007/api/lightspeed](http://localhost:7007/api/lightspeed))
-* `Model`: The LLM model to use (e.g., gemma3:27b)
-* `Provider`: The model provider (e.g., ollama)
+* `Model`: The LLM model to use (e.g., llama-31-8b-version1)
+* `Provider`: The model provider (e.g., vllm)
 * `BEARER_TOKEN`: Your authentication token
 
 > ℹ️ If the test detects `Base_Url` is `http://localhost:7007/api/lightspeed`, the token will automatically be extracted and updated in `.env` using Playwright.
 
 ## 🔐 Automatic Bearer Token Retrieval
 
-When running tests against a local Lightspeed instance (`Base_Url=http://localhost:7007/api/lightspeed`), the test suite will:
+When running tests against a [`rhdh-local`](https://github.com/redhat-developer/rhdh-local) Lightspeed instance (`Base_Url=http://localhost:7007/api/lightspeed`), the test suite will:
 
-* Open the Lightspeed frontend ([http://localhost:3000/lightspeed](http://localhost:3000/lightspeed)) using Playwright
+* Open the Lightspeed frontend ([http://localhost:7007/lightspeed](http://localhost:7007/lightspeed)) using Playwright
 * Automatically extract the `Bearer` token from browser requests
 * Save the token into `.env` under `BEARER_TOKEN`
 

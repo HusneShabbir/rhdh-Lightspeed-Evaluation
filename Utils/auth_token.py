@@ -32,7 +32,7 @@ def get_auth_token(page: Page) -> None:
     page.on("response", handle_response)
 
     try:
-        page.goto("http://localhost:3000/lightspeed", wait_until="networkidle", timeout=30000)
+        page.goto("http://localhost:7007/lightspeed", wait_until="networkidle", timeout=30000)
         page.get_by_role("button", name="Enter").click()
         expect(page.get_by_text("How can I help you today?")).to_be_visible()
     except Exception as e:
